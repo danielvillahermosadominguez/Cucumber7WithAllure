@@ -1,3 +1,4 @@
+@specs
 @lowlevel
 @cwa1
 Feature: this is an example (2) to configurate the enviroment with cucumber for Spring boot
