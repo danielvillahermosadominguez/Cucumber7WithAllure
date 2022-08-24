@@ -237,3 +237,48 @@ For this, we need to use @tags of cucumber in the features. With this tags we co
 * lowlevel documentation with the @lowlevel
 * And we could use another categories to filter the information, for example for capabilities.
 NOTE: It is important, to take into account the tags must be in lowercase always. In other way, it won't work.
+
+# Using Allure Docker Service and Allure Docker Service UI
+## Preparing the environment
+In this respository we have a folder with Allure Docker service. This image works with the 2.17.2 version
+of allure but we want it works with 2.19 which includes a new feature : filter with tags. Basically, when
+you search in the user interface, you could use the following expresion to filter by tags:
+```
+tags:tag1,tag2,tag3
+```
+In this filter you need to have into account two things:
+* tags must be always in lower case. In other case, allure will ignore it. 
+* wen you write several tags, you are using an "and". For example in the example above would be "tag1 and tag2 and tag3"
+
+One of the thing you could do is to use allure docker service. You have the information here:
+https://github.com/fescobar/allure-docker-service
+https://github.com/fescobar/allure-docker-service-ui
+
+First of all, we need to use the docker composer file: allure-docker-service/docker-custom/Dockerfile.bionic-custom.yml
+This is a docker file with the version of allure changed by 2.19.0. You'll need to build the image:
+In the folder allure-docker-service:
+```
+ -- The first time, you will need to rebuild the image
+ sudo docker compose -f docker-compose-dev.yml up --build
+ -- After, you don't need to build. You can use
+ sudo docker compose -f docker-compose-dev.yml up
+```
+In this case, you will be able to access to the:
+* API:http://localhost:7272/allure-docker-service/
+* GUI:http://localhost:7474/allure-docker-service-ui/projects/default
+In the local machine will be created a folder in ../target/allure-results
+
+The results of the allure must be included in this folder and you could:
+a) use the allure-docker-service-ui and in the "default" project click on: "Generate Report"
+b) use the api and call the endpoint: /generate-report with the parameter project_id = default
+
+## Simulating a pipeline with the script "updateAllure.sh"
+This is an example to simulate a pipeline.
+This script do the following actions:
+* clean the folder where the results have to be located
+* call the api to clean internally the folder with the results
+* generate the results in target/allure-results
+* copy the results to the folder which is expected by allure docker service
+* call the API to generate the report
+
+We are using always the default project for this example.
