@@ -1,4 +1,5 @@
 @highlevel
+@cwa1
 Feature: this is an example to configurate the enviroment with cucumber for Spring boot
   In order to start to work with BDD and have e2e tests
   as any user
